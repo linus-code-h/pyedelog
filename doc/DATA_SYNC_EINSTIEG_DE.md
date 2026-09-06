@@ -127,6 +127,11 @@ python mein_import.py
 Dasselbe Beispiel liegt auch als [sync_test_database.py](<../examples/sync_test_database.py>)
 im Repository. Vor dem Ausführen dort die Kennung und die Feldwerte anpassen.
 
+Die drei einzelnen Schritte gibt es zudem als kopierfertige Dateien:
+[anlegen oder aktualisieren](<../examples/sync_upsert.py>),
+[nur aktualisieren](<../examples/sync_update.py>) und
+[gezielt löschen](<../examples/sync_delete.py>).
+
 `upsert` bedeutet: existiert ein Datensatz mit dieser Kennung, wird er geändert.
 Existiert keiner, wird ein neuer Datensatz angelegt. Deshalb ist die Kennung wichtig:
 Sie muss pro Datensatz eindeutig und dauerhaft sein. Im Beispiel ist `bauteil` die

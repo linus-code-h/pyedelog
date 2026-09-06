@@ -11,6 +11,97 @@ Die eincheckbare Konfigurationsvorlage ist [.env.example](.env.example). Echte
 Service-ID und Secret Key stellt ein EDELOG-Administrator aus; sie gehören nur in
 die lokal ignorierte Datei `.env.local`.
 
+## Was macht die Library?
+
+`pyedelog` sendet Data-Sync-Aufträge aus Python an EDELOG. Ein Auftrag kann einen
+Datensatz anhand einer eindeutigen Kennung anlegen oder aktualisieren, einzelne
+Felder ändern oder einen genau ausgewählten Testdatensatz löschen. EDELOG verarbeitet
+den Auftrag im Hintergrund. Deshalb prüfst du den Job anschließend unter
+**Settings → Data Sync**: `enqueued` bedeutet angenommen, `Completed` erfolgreich.
+
+## Schnell installieren
+
+Direkt aus GitHub:
+
+```bash
+python -m pip install "git+https://github.com/linus-code-h/pyedelog.git"
+```
+
+Oder aus einem geklonten Repository:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install .
+```
+
+Unter Windows PowerShell aktivierst du die Umgebung mit:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+## Keys einrichten
+
+Der EDELOG-Administrator erstellt den Sync Service, gibt die Datenbank frei und
+stellt Service-ID sowie Secret Key aus. Danach:
+
+```bash
+cp .env.example .env.local
+set -a
+source .env.local
+set +a
+```
+
+Trage die echten Werte nur in `.env.local` ein. Sie wird nicht gepusht.
+
+## Einfach benutzen
+
+Das Beispiel legt den Datensatz mit der Kennung `mein-import-4711` in `test` an oder
+aktualisiert ihn. Datenbank- und Feldnamen sind technische EDELOG-Namen und müssen
+für andere Datenbanken angepasst werden.
+
+```python
+from edelog import DataSyncClient, DataSyncConfig, SyncRequest
+
+auftrag = SyncRequest()
+auftrag.database("test").upsert(
+    where={"bauteil": "mein-import-4711"},
+    values={"bauteil": "mein-import-4711", "anzahl": "1"},
+)
+
+with DataSyncClient(DataSyncConfig.from_env()) as sync:
+    antwort = sync.submit(auftrag)
+    print("Job-ID:", antwort["data"]["id"])
+    print("Status:", antwort["data"]["status"])
+```
+
+Für die drei einfachen Operationen gibt es direkt ausführbare Beispiele:
+
+```bash
+python examples/sync_upsert.py
+python examples/sync_update.py
+python examples/sync_delete.py
+```
+
+Vor dem Start Kennung und Feldwerte in der Datei anpassen. Das Delete-Beispiel
+entfernt Daten endgültig und gehört nur in eine Testdatenbank.
+
+## Entwicklung
+
+```bash
+python -m pip install -e '.[dev]'
+python -m pytest -q
+python -m ruff check .
+python -m ruff format --check .
+python -m mypy
+python -m build
+```
+
+Die Tests benötigen keine echten Zugangsdaten. Die ausführliche Anleitung steht in
+[DATA_SYNC_EINSTIEG_DE.md](<doc/DATA_SYNC_EINSTIEG_DE.md>), die Schritte für PyPI in
+[RELEASE_DE.md](<doc/RELEASE_DE.md>).
+
 Synchroner Python-Client für die EDELOG Data API und Data Sync API, ab Python 3.10.
 Die Library bietet OAuth-Anmeldung, Datensatzzugriff, paginierte Abfragen und
 validierte Sync-Aufträge. Workflows und Jobs innerhalb von EDELOG führen JavaScript

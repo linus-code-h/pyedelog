@@ -5,16 +5,36 @@ build-backend = "hatchling.build"
 [project]
 name = "pyedelog"
 version = "0.1.0"
-description = "Python client for EDELOG"
+description = "Safe Python client for EDELOG Data Sync"
 readme = "README.md"
 requires-python = ">=3.10"
+license = "MIT"
 authors = [
     { name = "Linus Hoppe" }
+]
+keywords = ["edelog", "data-sync", "integration"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
 dependencies = [
     "httpx>=0.27,<1",
 ]
+
+[project.urls]
+Homepage = "https://github.com/linus-code-h/pyedelog"
+Repository = "https://github.com/linus-code-h/pyedelog"
+Issues = "https://github.com/linus-code-h/pyedelog/issues"
 
 [project.optional-dependencies]
 dev = [
